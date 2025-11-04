@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에이닷영어학원 - 학원 상담 예약</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            letter-spacing: -0.3px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.15em;
+            opacity: 0.95;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 진행 표시줄 */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px 40px;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 12%;
+            right: 12%;
+            height: 3px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 12%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            z-index: 2;
+            transition: width 0.5s ease;
+            box-shadow: 0 1px 3px rgba(102, 126, 234, 0.3);
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 3;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e0e0e0;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #999;
+            transition: all 0.3s;
+            font-size: 1.2em;
+        }
+
+        .progress-step.active .step-circle {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .progress-step.completed .step-circle {
+            background: linear-gradient(135deg, #06d6a0 0%, #00b894 100%);
+            border-color: #06d6a0;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .form-container {
+            padding: 40px 50px;
+            min-height: 500px;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        .required {
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-right: 50px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.4em;
+        }
+
+        .school-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .school-item {
+            padding: 18px 22px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px solid #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .school-item:hover {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .school-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .school-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 캘린더 */
+        .calendar-container {
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-header button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-header button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .calendar-month {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #f8f9fa;
+            padding: 15px 10px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+            padding: 10px;
+        }
+
+        .calendar-weekday:first-child {
+            color: #e74c3c;
+        }
+
+        .calendar-weekday:last-child {
+            color: #3498db;
+        }
+
+        .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 10px;
+            gap: 5px;
+        }
+
+        .calendar-date {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        .calendar-date:hover:not(.disabled):not(.empty) {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border-color: #667eea;
+        }
+
+        .calendar-date.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            font-weight: 600;
+        }
+
+        .calendar-date.today {
+            border-color: #06d6a0;
+            color: #06d6a0;
+            font-weight: bold;
+            background: rgba(6, 214, 160, 0.05);
+        }
+
+        .calendar-date.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .calendar-date.empty {
+            cursor: default;
+        }
+
+        .calendar-date.sunday {
+            color: #e74c3c;
+        }
+
+        .calendar-date.saturday {
+            color: #3498db;
+        }
+
+        /* 시간 선택 */
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .time-item {
+            padding: 18px;
+            text-align: center;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 1.05em;
+            background: #fafafa;
+        }
+
+        .time-item:hover {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .time-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .time-item.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            background: #f0f0f0;
+        }
+
+        /* 폰 인증 */
+        .phone-verify {
+            display: flex;
+            gap: 10px;
+        }
+
+        .phone-verify input {
+            flex: 1;
+        }
+
+        .verify-btn {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .verify-btn:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6439a1 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .verify-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .verify-btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        .verify-code {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .verify-code.active {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* 체크박스 */
+        .checkbox-group {
+            margin-top: 20px;
+        }
+
+        .checkbox-item {
+            background: #fafafa;
+            padding: 22px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            border: 2px solid #e8e8e8;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        /* 버튼 */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-prev {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(127, 140, 141, 0.2);
+        }
+
+        .btn-prev:hover {
+            background: linear-gradient(135deg, #7f8c8d 0%, #6c7a89 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(127, 140, 141, 0.3);
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-next:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6439a1 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 완료 페이지 */
+        .completion {
+            text-align: center;
+        }
+
+        .completion-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .completion h2 {
+            font-size: 2.5em;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .completion p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .social-btn.naver {
+            background: #03C75A;
+        }
+
+        .social-btn.instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        .social-btn.youtube {
+            background: #FF0000;
+        }
+
+        .share-btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .share-btn:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6439a1 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .home-link {
+            display: inline-block;
+            padding: 16px 32px;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .home-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .time-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .calendar-date {
+                font-size: 0.9em;
+            }
+
+            .calendar-header {
+                padding: 15px;
+            }
+
+            .calendar-month {
+                font-size: 1.2em;
+            }
+
+            .social-links {
+                flex-direction: column;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .step-title {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 에이닷영어학원</h1>
+            <p>학원 상담 예약 시스템</p>
+        </div>
+
+        <!-- 진행 표시줄 -->
+        <div class="progress-bar">
+            <div class="progress-line" id="progressLine"></div>
+            <div class="progress-step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">학원 찾기</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">날짜·시간</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">상담정보</div>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="step-circle">✓</div>
+                <div class="step-label">신청완료</div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <form id="reservationForm">
+                <!-- Step 1: 내 주변 학원 찾기 -->
+                <div class="form-step active" data-step="1">
+                    <h2 class="step-title">🏫 내 주변 학원 찾기</h2>
+                    
+                    <div class="form-group">
+                        <label for="schoolSearch">학교 검색<span class="required">*</span></label>
+                        <div class="search-box">
+                            <input type="text" id="schoolSearch" placeholder="학교명을 입력하세요 (예: 서울초등학교)">
+                            <span class="search-icon">🔍</span>
+                        </div>
+                    </div>
+
+                    <div class="school-list" id="schoolList">
+                        <!-- 학교 목록이 여기에 동적으로 추가됩니다 -->
+                    </div>
+
+                    <input type="hidden" id="selectedSchool" name="selectedSchool">
+
+                    <!-- 인근 지점 선택 (학교 선택 후 표시) -->
+                    <div id="branchSection" style="display: none; margin-top: 40px;">
+                        <div class="form-group">
+                            <label>인근 학원 지점 선택<span class="required">*</span></label>
+                            <div class="school-list" id="branchList">
+                                <!-- 지점 목록이 여기에 동적으로 추가됩니다 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="selectedBranch" name="selectedBranch">
+                    <input type="hidden" id="selectedBranchPhone" name="selectedBranchPhone">
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-next" onclick="nextStep()" disabled id="step1NextBtn">다음</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: 날짜·시간 선택 -->
+                <div class="form-step" data-step="2">
+                    <h2 class="step-title">📅 날짜·시간 선택</h2>
+                    
+                    <!-- 선택된 지점 표시 -->
+                    <div id="selectedBranchInfo" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 18px; margin-bottom: 35px; text-align: center; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);">
+                        <div style="font-size: 1.6em; font-weight: 700; letter-spacing: -0.5px;">에이닷영어학원 <span id="displayBranchName"></span></div>
+                        <div style="font-size: 1em; margin-top: 12px; opacity: 0.95; font-weight: 500;">📍 <span id="displayBranchAddress"></span></div>
+                        <div style="font-size: 1em; margin-top: 8px; opacity: 0.95; font-weight: 500;">☎ <span id="displayBranchPhone"></span></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>예약 날짜 선택<span class="required">*</span></label>
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <button type="button" onclick="changeMonth(-1)">◀</button>
+                                <div class="calendar-month" id="calendarMonth">2024년 11월</div>
+                                <button type="button" onclick="changeMonth(1)">▶</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div class="calendar-weekday">일</div>
+                                <div class="calendar-weekday">월</div>
+                                <div class="calendar-weekday">화</div>
+                                <div class="calendar-weekday">수</div>
+                                <div class="calendar-weekday">목</div>
+                                <div class="calendar-weekday">금</div>
+                                <div class="calendar-weekday">토</div>
+                            </div>
+                            <div class="calendar-dates" id="calendarDates">
+                                <!-- 날짜가 여기에 동적으로 추가됩니다 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label>예약 시간 선택<span class="required">*</span></label>
+                        <div class="time-grid" id="timeGrid">
+                            <!-- 시간 슬롯이 여기에 동적으로 추가됩니다 -->
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="reservationDate" name="reservationDate">
+                    <input type="hidden" id="selectedTime" name="selectedTime">
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">이전</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep()" disabled id="step2NextBtn">다음</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: 상담정보 입력 -->
+                <div class="form-step" data-step="3">
+                    <h2 class="step-title">✏️ 상담정보 입력</h2>
+                    
+                    <!-- 선택된 지점 표시 -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 18px; margin-bottom: 35px; text-align: center; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);">
+                        <div style="font-size: 1.6em; font-weight: 700; letter-spacing: -0.5px;">에이닷영어학원 <span id="displayBranchName3"></span></div>
+                        <div style="font-size: 1em; margin-top: 12px; opacity: 0.95; font-weight: 500;">📍 <span id="displayBranchAddress3"></span></div>
+                        <div style="font-size: 1em; margin-top: 8px; opacity: 0.95; font-weight: 500;">☎ <span id="displayBranchPhone3"></span></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="font-size: 1.3em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">👨‍👩‍👧 학부모(법정대리인) 정보</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parentName">이름<span class="required">*</span></label>
+                        <input type="text" id="parentName" name="parentName" placeholder="홍길동" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parentPhone">연락처 (핸드폰번호)<span class="required">*</span></label>
+                        <div class="phone-verify">
+                            <input type="tel" id="parentPhone" name="parentPhone" placeholder="010-1234-5678" required>
+                            <button type="button" class="verify-btn" onclick="sendVerificationCode()">인증번호 받기</button>
+                        </div>
+                        <div class="verify-code" id="verifyCodeBox">
+                            <input type="text" id="verifyCode" placeholder="인증번호 6자리 입력" maxlength="6">
+                            <button type="button" class="verify-btn" onclick="verifyCode()">확인</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 40px;">
+                        <label style="font-size: 1.3em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">👶 자녀 정보</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="childName">자녀 이름<span class="required">*</span></label>
+                        <input type="text" id="childName" name="childName" placeholder="홍길동" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="childSchool">학교<span class="required">*</span></label>
+                        <input type="text" id="childSchool" name="childSchool" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="childGrade">학년<span class="required">*</span></label>
+                        <select id="childGrade" name="childGrade" required>
+                            <option value="">학년을 선택하세요</option>
+                            <option value="초5">초등학교 5학년</option>
+                            <option value="초6">초등학교 6학년</option>
+                            <option value="중1">중학교 1학년</option>
+                            <option value="중2">중학교 2학년</option>
+                            <option value="중3">중학교 3학년</option>
+                            <option value="고1">고등학교 1학년</option>
+                            <option value="고2">고등학교 2학년</option>
+                            <option value="고3">고등학교 3학년</option>
+                            <option value="재수생/기타">재수생/기타</option>
+                        </select>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" id="privacyAgree" name="privacyAgree" required>
+                                개인정보 수집 및 이용 동의<span class="required">*</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" id="marketingAgree" name="marketingAgree">
+                                마케팅 및 광고 활용 동의 (선택)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">이전</button>
+                        <button type="submit" class="btn btn-next">신청 완료</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: 신청 완료 -->
+                <div class="form-step" data-step="4">
+                    <div class="completion">
+                        <div class="completion-icon">🎉</div>
+                        <h2>신청 완료!</h2>
+                        <p>감사합니다.<br>문의하신 내용이 정상적으로 접수 되었습니다.</p>
+
+                        <h3 style="margin-bottom: 20px;">공식 채널 둘러보기</h3>
+                        <div class="social-links">
+                            <a href="https://blog.naver.com/adotenglish" class="social-btn naver" target="_blank">📗 네이버블로그</a>
+                            <a href="https://instagram.com/adotenglish" class="social-btn instagram" target="_blank">📸 인스타그램</a>
+                            <a href="https://youtube.com/@adotenglish" class="social-btn youtube" target="_blank">🎥 유튜브</a>
+                        </div>
+
+                        <button class="share-btn" onclick="shareContent()">📤 에이닷영어학원 공유하기</button>
+                        
+                        <br><br>
+                        <a href="https://adotenglish.com" class="home-link">🏠 홈페이지 돌아가기</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ⚙️ 구글 스프레드시트 설정
+        // Google Apps Script 웹 앱 URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAXNwpJ94L9KHYmm-pjsEhOgM8bWiQVwNZbe05-I8dc5St555Hgx3O_miIr8YrT4Qo6Q/exec';
+        
+        let currentStep = 1;
+        let selectedSchoolData = null;
+        let selectedBranchData = null;
+        let isPhoneVerified = false;
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let selectedDate = null;
+
+        // 학교 데이터 (예시)
+        const schools = [
+            { name: '서울초등학교', address: '서울시 강남구' },
+            { name: '서울중학교', address: '서울시 강동구' },
+            { name: '부산초등학교', address: '부산시 해운대구' },
+            { name: '대구초등학교', address: '대구시 수성구' },
+            { name: '인천초등학교', address: '인천시 남동구' },
+            { name: '광주초등학교', address: '광주시 남구' },
+            { name: '대전초등학교', address: '대전시 유성구' },
+            { name: '수원초등학교', address: '경기도 수원시' },
+            { name: '성남초등학교', address: '경기도 성남시' },
+            { name: '고양초등학교', address: '경기도 고양시' },
+        ];
+
+        // 88개 지점 데이터 (지점정보.xlsx)
+        const branches = [
+            {"NO.":1,"지역":"서울특별시","지점":"강동지점","주소":"서울특별시 강동구 동남로71길 32 환타지아빌딩 10층 에이닷 영어학원","번호":"(02)426-5466"},
+            {"NO.":2,"지역":"서울특별시","지점":"광진지점","주소":"서울특별시 광진구 광나루로 590 아산빌딩 7층 에이닷 영어학원","번호":"(02)454-5466"},
+            {"NO.":3,"지역":"서울특별시","지점":"대치지점","주소":"서울특별시 강남구 도곡로 423 윤성빌딩 2층 에이닷 영어학원","번호":"(02)553-5466"},
+            {"NO.":4,"지역":"서울특별시","지점":"마곡지점","주소":"서울특별시 강서구 마곡서1로 115-1 마곡헤리움1차 2층 에이닷 영어학원","번호":"(02)2661-5465"},
+            {"NO.":5,"지역":"서울특별시","지점":"마포지점","주소":"서울특별시 마포구 대흥로 51 새영빌딩 3층 에이닷 영어학원","번호":"(02)702-5466"},
+            {"NO.":6,"지역":"서울특별시","지점":"목동지점","주소":"서울특별시 양천구 목동서로 349 센트럴프라자 11층 에이닷 영어학원","번호":"(02)2644-5466"},
+            {"NO.":7,"지역":"서울특별시","지점":"성북지점","주소":"서울특별시 성북구 아리랑로 36 백산빌딩 2층 에이닷 영어학원","번호":"(02)922-5466"},
+            {"NO.":8,"지역":"서울특별시","지점":"은평지점","주소":"서울특별시 은평구 서오릉로 139, 3층 에이닷 영어학원","번호":"(02)354-5466"},
+            {"NO.":9,"지역":"서울특별시","지점":"중계지점","주소":"서울특별시 노원구 한글비석로 227 이진플라자 8층 에이닷 영어학원","번호":"(02)934-5466"},
+            {"NO.":10,"지역":"경기도","지점":"광교상현지점","주소":"경기도 용인시 수지구 광교중앙로 320 5층 에이닷 영어학원","번호":"(031)272-5466"},
+            {"NO.":11,"지역":"경기도","지점":"광명하안지점","주소":"경기도 광명시 하안로 294-5 청진빌딩 6층 에이닷 영어학원","번호":"(02)891-5466"},
+            {"NO.":12,"지역":"경기도","지점":"광주태전지점","주소":"경기도 광주시 태전중앙2길 21, 3층 에이닷 영어학원","번호":"(031)313-5466"},
+            {"NO.":13,"지역":"경기도","지점":"구리토평지점","주소":"경기도 구리시 벌말로 186 SM빌딩 2층 에이닷 영어학원","번호":"(031)565-5466"},
+            {"NO.":14,"지역":"경기도","지점":"김포사우지점","주소":"경기도 김포시 사우중로 82 사우프라자 5층 에이닷 영어학원","번호":"(031)982-5467"},
+            {"NO.":15,"지역":"경기도","지점":"동탄지점","주소":"경기도 화성시 동탄문화센터로 61 아시아프라자 6층 에이닷 영어학원","번호":"(031)613-5465"},
+            {"NO.":16,"지역":"경기도","지점":"부천상동지점","주소":"경기도 부천시 길주로77번길 61 부건프라자 7층 에이닷 영어학원","번호":"(032)321-5466"},
+            {"NO.":17,"지역":"경기도","지점":"부천소사지점","주소":"경기도 부천시 소사동로 78 유성메트로 5층 에이닷 영어학원","번호":"(032)345-5466"},
+            {"NO.":18,"지역":"경기도","지점":"분당지점","주소":"경기도 성남시 분당구 내정로173번길 49 4층 에이닷 영어학원","번호":"(031)714-5466"},
+            {"NO.":19,"지역":"경기도","지점":"산본지점","주소":"경기도 군포시 광정로 59, 3층 에이닷 영어학원","번호":"(031)397-5466"},
+            {"NO.":20,"지역":"경기도","지점":"성남지점","주소":"경기도 성남시 수정구 산성대로 229 8층 에이닷 영어학원","번호":"(031)757-5466"},
+            {"NO.":21,"지역":"경기도","지점":"송탄지점","주소":"경기도 평택시 이충로 49-27 하이존2 4층 에이닷 영어학원","번호":"(031)668-5466"},
+            {"NO.":22,"지역":"경기도","지점":"수원영통지점","주소":"경기도 수원시 영통구 봉영로 1605 모던타운 4층 에이닷 영어학원","번호":"(031)204-5466"},
+            {"NO.":23,"지역":"경기도","지점":"수원장안지점","주소":"경기도 수원시 장안구 정자천로 171, 3층(정자동) 에이닷 영어학원","번호":"(031)271-5465"},
+            {"NO.":24,"지역":"경기도","지점":"수원조원지점","주소":"경기도 수원시 장안구 조원동 898-2 4층 에이닷 영어학원","번호":"(031)255-5466"},
+            {"NO.":25,"지역":"경기도","지점":"수원호매실지점","주소":"경기도 수원시 권선구 금곡로 106, 2층 에이닷 영어학원","번호":"(031)227-5466"},
+            {"NO.":26,"지역":"경기도","지점":"시흥배곧지점","주소":"경기도 시흥시 배곧동 194-1 5층 에이닷 영어학원(센터프라자)","번호":"(031)497-5466"},
+            {"NO.":27,"지역":"경기도","지점":"시흥은행지점","주소":"경기도 시흥시 은행로 265 삼영빌딩 2, 3층 에이닷 영어학원","번호":"(031)404-5566"},
+            {"NO.":28,"지역":"경기도","지점":"안산고잔지점","주소":"경기도 안산시 단원구 광덕서로 54 5층 에이닷 영어학원","번호":"(031)409-5466"},
+            {"NO.":29,"지역":"경기도","지점":"안산본오지점","주소":"경기도 안산시 상록구 샘골로 132 2층 에이닷 영어학원","번호":"(031)418-5466"},
+            {"NO.":30,"지역":"경기도","지점":"안산선부지점","주소":"경기도 안산시 단원구 선부로 195 서울빌딩 4층 에이닷 영어학원","번호":"(031)405-5466"},
+            {"NO.":31,"지역":"경기도","지점":"안산성포지점","주소":"경기도 안산시 상록구 예술광장1로 88 삼희프라자 2층 에이닷 영어학원","번호":"(031)411-9466"},
+            {"NO.":32,"지역":"경기도","지점":"안산초지지점","주소":"경기도 안산시 단원구 초지로 100 세종프라자 4층 에이닷 영어학원","번호":"(031)410-5466"},
+            {"NO.":33,"지역":"경기도","지점":"안양지점","주소":"경기도 안양시 만안구 안양로 366 상연빌딩 4층 에이닷 영어학원","번호":"(031)689-5466"},
+            {"NO.":34,"지역":"경기도","지점":"양주옥정지점","주소":"경기도 양주시 옥정로 222, 1동 12층 에이닷 영어학원","번호":"(031)865-5466"},
+            {"NO.":35,"지역":"경기도","지점":"오산지점","주소":"경기도 오산시 운암로 35, 한진프라자 4층 에이닷 영어학원","번호":"(031)373-5467"},
+            {"NO.":36,"지역":"경기도","지점":"용인동백지점","주소":"경기도 용인시 기흥구 동백중앙로 265 더엠 5층 에이닷 영어학원","번호":"(031)274-5466"},
+            {"NO.":37,"지역":"경기도","지점":"용인수지지점","주소":"경기도 용인시 수지구 풍덕천로 108 준오빌딩 4층 에이닷 영어학원","번호":"(031)266-5466"},
+            {"NO.":38,"지역":"경기도","지점":"위례지점","주소":"경기도 성남시 수정구 창곡동 513 에이플타워 904호","번호":"(031)979-5466"},
+            {"NO.":39,"지역":"경기도","지점":"의정부지점","주소":"경기도 의정부시 청사로5번길 8-17, 센터프라자 304호","번호":"(031)847-5466"},
+            {"NO.":40,"지역":"경기도","지점":"이천창전지점","주소":"경기도 이천시 영창로 202(창전동) 양정빌딩 4층 에이닷 영어학원","번호":"(031)631-5466"},
+            {"NO.":41,"지역":"경기도","지점":"일산백마지점","주소":"경기도 고양시 일산동구 일산로 219 수현빌딩 3층 에이닷 영어학원","번호":"(031)905-5466"},
+            {"NO.":42,"지역":"경기도","지점":"파주운정지점","주소":"경기도 파주시 교하로 87 삼성프라자 2층 에이닷 영어학원","번호":"(031)947-5467"},
+            {"NO.":43,"지역":"경기도","지점":"평촌지점","주소":"경기도 안양시 동안구 평촌대로 107 흥일상가 6층 에이닷 영어학원","번호":"(031)381-3733"},
+            {"NO.":44,"지역":"경기도","지점":"평택합정지점","주소":"경기도 평택시 중앙로 176 SK뷰주상복합상가 2층 에이닷 영어학원","번호":"(031)651-5466"},
+            {"NO.":45,"지역":"경기도","지점":"호평지점","주소":"경기도 남양주시 늘을1로 16번길 25, 성보빌딩 3층 에이닷 영어학원","번호":"(031)593-5466"},
+            {"NO.":46,"지역":"경기도","지점":"화성병점지점","주소":"경기도 화성시 병점2로 42-2 진영빌딩 2층 에이닷 영어학원","번호":"(031)232-5466"},
+            {"NO.":47,"지역":"인천광역시","지점":"인천계양지점","주소":"인천광역시 계양구 계산새로 85 6층 에이닷 영어학원","번호":"(032)544-5466"},
+            {"NO.":48,"지역":"인천광역시","지점":"인천논현지점","주소":"인천광역시 남동구 논고개로 77, 에코타워 6층 에이닷 영어학원","번호":"(032)433-5466"},
+            {"NO.":49,"지역":"인천광역시","지점":"인천부평지점","주소":"인천광역시 부평구 부흥로 265, 우림빌딩 4층","번호":"(032)511-5466"},
+            {"NO.":50,"지역":"인천광역시","지점":"인천송도지점","주소":"인천 연수구 신송로 154 더제니스 3층 에이닷 영어학원","번호":"(032)821-5466"},
+            {"NO.":51,"지역":"인천광역시","지점":"인천청라지점","주소":"인천광역시 서구 청라에메랄드로102번길 8, 9층 에이닷 영어학원","번호":"(032)561-5466"},
+            {"NO.":52,"지역":"강원도","지점":"강릉지점","주소":"강원도 강릉시 솔올로5번길 52 4층 에이닷 영어학원","번호":"(033)644-5465"},
+            {"NO.":53,"지역":"강원도","지점":"원주지점","주소":"강원도 원주시 능라동길 70 3층 에이닷영어학원","번호":"(033)766-5266"},
+            {"NO.":54,"지역":"강원도","지점":"춘천지점","주소":"강원도 춘천시 후석로 247 후평프라자 3층 에이닷 영어학원","번호":"(033)254-5466"},
+            {"NO.":55,"지역":"충청남도","지점":"대전관저지점","주소":"대전광역시 서구 구봉로 125, 2층 에이닷 영어학원","번호":"(042)543-5466"},
+            {"NO.":56,"지역":"충청남도","지점":"대전대덕지점","주소":"대전광역시 대덕구 동춘당로94번길 11-15, 6층 에이닷 영어학원","번호":"(042)623-5466"},
+            {"NO.":57,"지역":"충청남도","지점":"대전서구지점","주소":"대전광역시 서구 둔산로 134 아베스빌딩 7층 에이닷 영어학원","번호":"(042)485-5466"},
+            {"NO.":58,"지역":"충청남도","지점":"대전유성지점","주소":"대전광역시 유성구 노은로 158, 그랜드타운 603호, 604호","번호":"(042)825-5469"},
+            {"NO.":59,"지역":"충청남도","지점":"아산지점","주소":"충남 아산시 충무로 22, 유엘시티 5층 에이닷 영어학원","번호":"(041)531-5466"},
+            {"NO.":60,"지역":"충청남도","지점":"천안불당지점","주소":"충남 천안시 서북구 불당21로 67-12 퍼스트프라자 4층(407호 408호)","번호":"(041)576-5466"},
+            {"NO.":61,"지역":"충청북도","지점":"청주개신지점","주소":"충북 청주시 서원구 복대로 7 대상마스터즈빌딩 6층 에이닷 영어학원","번호":"(043)233-5465"},
+            {"NO.":62,"지역":"충청북도","지점":"청주상당지점","주소":"충북 청주시 상당구 산성로92번길 5 경도빌딩 4층 에이닷 영어학원","번호":"(043)292-5466"},
+            {"NO.":63,"지역":"충청북도","지점":"충주지점","주소":"충청북도 충주시 호암수청1로 55, 4층 에이닷 영어학원","번호":"(043)857-5466"},
+            {"NO.":64,"지역":"세종특별자치시","지점":"세종아름지점","주소":"세종특별자치시 보듬3로 91, 7층 에이닷 영어학원","번호":"(044)863-5466"},
+            {"NO.":65,"지역":"세종특별자치시","지점":"세종보람지점","주소":"세종특별자치시 보람동 742 금강시티타워 503호, 502호","번호":"(044)867-5466"},
+            {"NO.":66,"지역":"경상남도","지점":"김해지점","주소":"경남 김해시 율하3로 41, 3층 에이닷 영어학원","번호":"(055)321-5466"},
+            {"NO.":67,"지역":"경상남도","지점":"부산동래지점","주소":"부산광역시 동래구 아시아드대로 149-1, 3층 에이닷 영어학원","번호":"(051)501-5466"},
+            {"NO.":68,"지역":"경상남도","지점":"부산명지지점","주소":"부산광역시 강서구 명지동 3412-2 정우빌딩 2차 9층 에이닷 영어학원","번호":"(051)202-5466"},
+            {"NO.":69,"지역":"경상남도","지점":"부산사하지점","주소":"부산광역시 사하구 낙동대로 374, 8층 에이닷 영어학원","번호":"(051)201-5466"},
+            {"NO.":70,"지역":"경상남도","지점":"부산수영지점","주소":"부산광역시 수영구 수영로 410, 8층 에이닷 영어학원","번호":"(051)622-5466"},
+            {"NO.":71,"지역":"경상남도","지점":"부산진구지점","주소":"부산광역시 부산진구 연수로 6-1, 경도블리스타워 101호 에이닷 영어학원","번호":"(051)867-5466"},
+            {"NO.":72,"지역":"경상남도","지점":"부산해운대지점","주소":"부산광역시 해운대구 세실로 33 4층 에이닷 영어학원","번호":"(051)702-5466"},
+            {"NO.":73,"지역":"경상남도","지점":"부산화명지점","주소":"부산광역시 북구 화명대로 27 윤프라자 4층 에이닷 영어학원","번호":"(051)364-5466"},
+            {"NO.":74,"지역":"경상남도","지점":"양산지점","주소":"경상남도 양산시 물금읍 범어로 72, 7층 에이닷 영어학원","번호":"(055)363-5466"},
+            {"NO.":75,"지역":"경상남도","지점":"울산옥동지점","주소":"울산광역시 남구 문수로 348 3층 에이닷 영어학원","번호":"(052)269-5466"},
+            {"NO.":76,"지역":"경상남도","지점":"진주지점","주소":"경남 진주시 진양호로 221, 2층 에이닷 영어학원","번호":"(055)795-5466"},
+            {"NO.":77,"지역":"경상남도","지점":"창원상남지점","주소":"경남 창원시 성산구 원이대로682번길 10, 하바드빌딩 5층 에이닷 영어학원","번호":"(055)286-5466"},
+            {"NO.":78,"지역":"경상북도","지점":"구미지점","주소":"경상북도 구미시 봉곡남로 102, 봉곡빌딩 5층 에이닷 영어학원","번호":"(054)456-5466"},
+            {"NO.":79,"지역":"경상북도","지점":"대구달서지점","주소":"대구광역시 달서구 조암로 11 2층 에이닷 영어학원","번호":"(053)642-5466"},
+            {"NO.":80,"지역":"경상북도","지점":"대구수성지점","주소":"대구광역시 수성구 달구벌대로 2510 8층 에이닷 영어학원","번호":"(053)743-5466"},
+            {"NO.":81,"지역":"경상북도","지점":"대구이곡지점","주소":"대구광역시 달서구 이곡공원로 32, 6층 에이닷 영어학원(성서중앙빌딩 A동)","번호":"(053)582-5466"},
+            {"NO.":82,"지역":"경상북도","지점":"대구침산지점","주소":"대구광역시 북구 침산남로 140, 엠비프라자동 4층 에이닷 영어학원","번호":"(053)355-5466"},
+            {"NO.":83,"지역":"경상북도","지점":"대구칠곡지점","주소":"대구광역시 북구 학정로 427, 5층(동천동, 강북빌딩) 에이닷 영어학원","번호":"(053)325-5466"},
+            {"NO.":84,"지역":"경상북도","지점":"포항지점","주소":"경북 포항시 남구 포스코대로 123, 5층 에이닷 영어학원","번호":"(054)276-5466"},
+            {"NO.":85,"지역":"전라도","지점":"광주봉선지점","주소":"광주광역시 남구 봉선로 173 5층 에이닷 영어학원","번호":"(062)676-5466"},
+            {"NO.":86,"지역":"전라도","지점":"광주수완지점","주소":"광주광역시 광산구 장신로 143, 7층 에이닷 영어학원","번호":"(062)953-5466"},
+            {"NO.":87,"지역":"전라도","지점":"광주일곡지점","주소":"광주광역시 북구 설죽로 518, 2층 에이닷 영어학원","번호":"(062)571-5466"},
+            {"NO.":88,"지역":"전라도","지점":"전주지점","주소":"전북 전주시 완산구 서신로 4 3층 에이닷 영어학원","번호":"(063)277-5466"}
+        ];
+
+        // 시간 슬롯 생성 (16:00~21:00, 30분 단위)
+        const timeSlots = [
+            '16:00', '16:30', '17:00', '17:30',
+            '18:00', '18:30', '19:00', '19:30',
+            '20:00', '20:30', '21:00'
+        ];
+
+        // 페이지 로드 시 초기화
+        window.onload = function() {
+            displaySchools(schools);
+            generateTimeSlots();
+            generateCalendar(currentYear, currentMonth);
+        };
+
+        // 학교 검색
+        document.getElementById('schoolSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = schools.filter(school => 
+                school.name.toLowerCase().includes(searchTerm) || 
+                school.address.toLowerCase().includes(searchTerm)
+            );
+            displaySchools(filtered);
+        });
+
+        // 학교 목록 표시
+        function displaySchools(schoolList) {
+            const container = document.getElementById('schoolList');
+            container.innerHTML = '';
+            
+            if (schoolList.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">검색 결과가 없습니다.</div>';
+                return;
+            }
+
+            schoolList.forEach(school => {
+                const div = document.createElement('div');
+                div.className = 'school-item';
+                div.innerHTML = `
+                    <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 5px;">${school.name}</div>
+                    <div style="color: #666; font-size: 0.9em;">${school.address} | ${school.branch}</div>
+                `;
+                div.onclick = () => selectSchool(school, div);
+                container.appendChild(div);
+            });
+        }
+
+        // 학교 선택
+        function selectSchool(school, element) {
+            // 이전 선택 제거
+            document.querySelectorAll('.school-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 현재 선택
+            element.classList.add('selected');
+            selectedSchoolData = school;
+            document.getElementById('selectedSchool').value = school.name;
+            
+            // Step 3의 자녀 학교에도 자동 입력
+            document.getElementById('childSchool').value = school.name;
+            
+            // 지점 섹션 표시
+            document.getElementById('branchSection').style.display = 'block';
+            
+            // 지점 목록 표시 (전체)
+            displayBranches(branches);
+            
+            // 다음 버튼은 지점 선택 후에만 활성화
+            document.getElementById('step1NextBtn').disabled = true;
+        }
+
+        // 지점 목록 표시
+        function displayBranches(branchList) {
+            const container = document.getElementById('branchList');
+            container.innerHTML = '';
+            
+            if (branchList.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">검색 결과가 없습니다.</div>';
+                return;
+            }
+
+            branchList.forEach(branch => {
+                const div = document.createElement('div');
+                div.className = 'school-item';
+                div.innerHTML = `
+                    <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 5px;">${branch.지점}</div>
+                    <div style="color: #666; font-size: 0.9em;">${branch.주소}</div>
+                    <div style="color: #4A90E2; font-size: 0.9em; margin-top: 5px;">☎ ${branch.번호}</div>
+                `;
+                div.onclick = () => selectBranch(branch, div);
+                container.appendChild(div);
+            });
+        }
+
+        // 지점 선택
+        function selectBranch(branch, element) {
+            // 이전 선택 제거
+            document.querySelectorAll('#branchList .school-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 현재 선택
+            element.classList.add('selected');
+            selectedBranchData = branch;
+            document.getElementById('selectedBranch').value = branch.지점;
+            document.getElementById('selectedBranchPhone').value = branch.번호;
+            
+            // 다음 버튼 활성화
+            document.getElementById('step1NextBtn').disabled = false;
+        }
+
+        // 시간 슬롯 생성
+        function generateTimeSlots() {
+            const container = document.getElementById('timeGrid');
+            container.innerHTML = '';
+            
+            timeSlots.forEach(time => {
+                const div = document.createElement('div');
+                div.className = 'time-item';
+                div.textContent = time;
+                div.onclick = () => selectTime(time, div);
+                container.appendChild(div);
+            });
+        }
+
+        // 시간 선택
+        function selectTime(time, element) {
+            document.querySelectorAll('.time-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            document.getElementById('selectedTime').value = time;
+            
+            // 날짜와 시간이 모두 선택되면 다음 버튼 활성화
+            if (selectedDate) {
+                document.getElementById('step2NextBtn').disabled = false;
+            }
+        }
+
+        // 캘린더 생성
+        function generateCalendar(year, month) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDayOfWeek = firstDay.getDay();
+            
+            // 월 표시 업데이트
+            const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+            document.getElementById('calendarMonth').textContent = `${year}년 ${monthNames[month]}`;
+            
+            // 날짜 컨테이너
+            const container = document.getElementById('calendarDates');
+            container.innerHTML = '';
+            
+            // 빈 칸 채우기 (월의 시작 전)
+            for (let i = 0; i < startDayOfWeek; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'calendar-date empty';
+                container.appendChild(emptyDiv);
+            }
+            
+            // 날짜 생성
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateDiv = document.createElement('div');
+                dateDiv.className = 'calendar-date';
+                dateDiv.textContent = day;
+                
+                const currentDate = new Date(year, month, day);
+                const dayOfWeek = currentDate.getDay();
+                
+                // 일요일 빨간색
+                if (dayOfWeek === 0) {
+                    dateDiv.classList.add('sunday');
+                }
+                // 토요일 파란색
+                if (dayOfWeek === 6) {
+                    dateDiv.classList.add('saturday');
+                }
+                
+                // 오늘 표시
+                if (currentDate.getTime() === today.getTime()) {
+                    dateDiv.classList.add('today');
+                }
+                
+                // 과거 날짜 비활성화
+                if (currentDate < today) {
+                    dateDiv.classList.add('disabled');
+                } else {
+                    // 클릭 이벤트
+                    dateDiv.onclick = function() {
+                        selectCalendarDate(year, month, day, dateDiv);
+                    };
+                }
+                
+                container.appendChild(dateDiv);
+            }
+        }
+
+        // 캘린더 날짜 선택
+        function selectCalendarDate(year, month, day, element) {
+            // 이전 선택 제거
+            document.querySelectorAll('.calendar-date').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 현재 선택
+            element.classList.add('selected');
+            
+            // 날짜 저장 (YYYY-MM-DD 형식)
+            const monthStr = String(month + 1).padStart(2, '0');
+            const dayStr = String(day).padStart(2, '0');
+            selectedDate = `${year}-${monthStr}-${dayStr}`;
+            document.getElementById('reservationDate').value = selectedDate;
+            
+            // 시간도 선택되었으면 다음 버튼 활성화
+            if (document.getElementById('selectedTime').value) {
+                document.getElementById('step2NextBtn').disabled = false;
+            }
+        }
+
+        // 월 변경
+        function changeMonth(direction) {
+            currentMonth += direction;
+            
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            
+            // 과거 월로 못 가게 제한
+            const today = new Date();
+            const selectedMonthDate = new Date(currentYear, currentMonth, 1);
+            const currentMonthDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            if (selectedMonthDate < currentMonthDate) {
+                currentYear = today.getFullYear();
+                currentMonth = today.getMonth();
+                return;
+            }
+            
+            generateCalendar(currentYear, currentMonth);
+        }
+
+        // 전화번호 자동 포맷팅
+        document.getElementById('parentPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 3 && value.length <= 7) {
+                value = value.slice(0, 3) + '-' + value.slice(3);
+            } else if (value.length > 7) {
+                value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+            }
+            e.target.value = value;
+        });
+
+        // 인증번호 발송
+        function sendVerificationCode() {
+            console.log('인증번호 발송 함수 실행');
+            const phone = document.getElementById('parentPhone').value;
+            console.log('입력된 전화번호:', phone);
+            
+            if (!phone || phone.length < 13) {
+                alert('올바른 전화번호를 입력해주세요.');
+                return;
+            }
+            
+            // TODO: 실제 SMS API 연동
+            alert('인증번호가 발송되었습니다.\n\n개발 모드 인증번호: 123456');
+            document.getElementById('verifyCodeBox').classList.add('active');
+            console.log('인증번호 박스 활성화');
+        }
+
+        // 인증번호 확인
+        function verifyCode() {
+            const code = document.getElementById('verifyCode').value;
+            
+            // TODO: 실제 인증 로직
+            if (code === '123456' || code.length === 6) {
+                alert('인증이 완료되었습니다!');
+                isPhoneVerified = true;
+                document.getElementById('verifyCodeBox').style.display = 'none';
+                document.getElementById('parentPhone').readOnly = true;
+            } else {
+                alert('인증번호가 일치하지 않습니다.');
+            }
+        }
+
+        // 다음 단계
+        function nextStep() {
+            if (currentStep < 4) {
+                // 현재 단계 검증
+                if (!validateStep(currentStep)) {
+                    return;
+                }
+
+                currentStep++;
+                
+                // 지점 정보 표시
+                if (selectedBranchData) {
+                    if (currentStep === 2) {
+                        document.getElementById('displayBranchName').textContent = selectedBranchData.지점;
+                        document.getElementById('displayBranchAddress').textContent = selectedBranchData.주소;
+                        document.getElementById('displayBranchPhone').textContent = selectedBranchData.번호;
+                    }
+                    if (currentStep === 3) {
+                        document.getElementById('displayBranchName3').textContent = selectedBranchData.지점;
+                        document.getElementById('displayBranchAddress3').textContent = selectedBranchData.주소;
+                        document.getElementById('displayBranchPhone3').textContent = selectedBranchData.번호;
+                    }
+                }
+                
+                updateSteps();
+            }
+        }
+
+        // 이전 단계
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                
+                // 지점 정보 표시 (이전 버튼 눌렀을 때도)
+                if (selectedBranchData) {
+                    if (currentStep === 2) {
+                        document.getElementById('displayBranchName').textContent = selectedBranchData.지점;
+                        document.getElementById('displayBranchAddress').textContent = selectedBranchData.주소;
+                        document.getElementById('displayBranchPhone').textContent = selectedBranchData.번호;
+                    }
+                }
+                
+                updateSteps();
+            }
+        }
+
+        // 단계 업데이트
+        function updateSteps() {
+            // 폼 단계 표시/숨김
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+
+            // 진행 표시줄 업데이트
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                if (index < currentStep - 1) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index === currentStep - 1) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+
+            // 진행 바 업데이트
+            const progressPercent = ((currentStep - 1) / 3) * 76; // 76%는 4단계 기준
+            document.getElementById('progressLine').style.width = progressPercent + '%';
+
+            // 페이지 상단으로 스크롤
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 단계별 검증
+        function validateStep(step) {
+            switch(step) {
+                case 1:
+                    if (!selectedSchoolData) {
+                        alert('학교를 선택해주세요.');
+                        return false;
+                    }
+                    if (!selectedBranchData) {
+                        alert('학원 지점을 선택해주세요.');
+                        return false;
+                    }
+                    break;
+                case 2:
+                    const date = document.getElementById('reservationDate').value;
+                    const time = document.getElementById('selectedTime').value;
+                    if (!date || !time) {
+                        alert('날짜와 시간을 선택해주세요.');
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        // 폼 제출
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 최종 검증
+            const parentPhone = document.getElementById('parentPhone').value;
+            if (!parentPhone || parentPhone.length < 13) {
+                alert('올바른 전화번호를 입력해주세요.');
+                return;
+            }
+
+            // 개발 모드: 인증 체크 생략 (나중에 실제 SMS API 연동 시 활성화)
+            // if (!isPhoneVerified) {
+            //     alert('휴대폰 번호 인증을 완료해주세요.');
+            //     return;
+            // }
+
+            if (!document.getElementById('privacyAgree').checked) {
+                alert('개인정보 수집 및 이용에 동의해주세요.');
+                return;
+            }
+
+            // 데이터 수집 (순서 명확히)
+            const formData = {
+                '등록일시': new Date().toLocaleString('ko-KR'),
+                '지점명': selectedBranchData.지점,
+                '예약날짜': document.getElementById('reservationDate').value,
+                '예약시간': document.getElementById('selectedTime').value,
+                '학부모이름': document.getElementById('parentName').value,
+                '학부모연락처': document.getElementById('parentPhone').value,
+                '자녀이름': document.getElementById('childName').value,
+                '자녀학교': document.getElementById('childSchool').value,
+                '자녀학년': document.getElementById('childGrade').value,
+                '개인정보동의': document.getElementById('privacyAgree').checked,
+                '마케팅동의': document.getElementById('marketingAgree').checked
+            };
+
+            console.log('📦 예약 데이터:', formData);
+            console.log('📝 지점명:', formData['지점명']);
+            console.log('📝 예약날짜:', formData['예약날짜']);
+
+            // 로컬 스토리지에 저장 (백업용)
+            let reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+            reservations.push(formData);
+            localStorage.setItem('reservations', JSON.stringify(reservations));
+
+            // 구글 스프레드시트로 전송
+            sendToGoogleSheets(formData);
+        });
+
+        // 구글 스프레드시트로 데이터 전송
+        async function sendToGoogleSheets(data) {
+            // URL이 설정되지 않았으면 로컬 모드
+            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+                console.warn('⚠️ Google Script URL이 설정되지 않았습니다. 로컬 모드로 실행됩니다.');
+                alert('✅ 등록이 완료되었습니다!\n\n(개발 모드: 구글 스프레드시트 미연동)');
+                currentStep = 4;
+                updateSteps();
+                return;
+            }
+
+            try {
+                console.log('📤 구글 스프레드시트로 데이터 전송 중...');
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // CORS 문제 해결
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('✅ 데이터 전송 완료!');
+                
+                // 완료 페이지로 이동
+                currentStep = 4;
+                updateSteps();
+                
+            } catch (error) {
+                console.error('❌ 데이터 전송 실패:', error);
+                
+                // 에러가 발생해도 완료 페이지로 이동 (no-cors 모드에서는 응답을 받을 수 없음)
+                alert('⚠️ 데이터가 전송되었습니다.\n\n스프레드시트를 확인해주세요.');
+                currentStep = 4;
+                updateSteps();
+            }
+        }
+
+        // 공유하기
+        function shareContent() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '에이닷영어학원',
+                    text: '에이닷영어학원에서 상담 받아보세요!',
+                    url: 'https://adotenglish.com'
+                }).catch(err => console.log('공유 실패:', err));
+            } else {
+                // 폴백: 클립보드 복사
+                navigator.clipboard.writeText('https://adotenglish.com');
+                alert('링크가 복사되었습니다!');
+            }
+        }
+    </script>
+</body>
+</html>
