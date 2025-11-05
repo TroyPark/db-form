@@ -2,21 +2,29 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2196F3">
     <title>에이닷영어학원 - 학원 상담 예약</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(33, 150, 243, 0.2);
         }
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
             min-height: 100vh;
             padding: 20px;
             letter-spacing: -0.3px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            touch-action: manipulation;
         }
 
         .container {
@@ -29,12 +37,19 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
             padding: 50px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
+        }
+
+        .header img {
+            max-width: 300px;
+            height: auto;
+            position: relative;
+            z-index: 1;
         }
 
         .header::before {
@@ -54,6 +69,17 @@
             font-weight: 700;
             position: relative;
             z-index: 1;
+        }
+
+        /* BI 로고 이미지 */
+        .header-logo {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
         }
 
         .header p {
@@ -89,10 +115,10 @@
             top: 50%;
             left: 12%;
             height: 3px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #2196F3 0%, #42A5F5 100%);
             z-index: 2;
             transition: width 0.5s ease;
-            box-shadow: 0 1px 3px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 1px 3px rgba(33, 150, 243, 0.3);
         }
 
         .progress-step {
@@ -119,11 +145,11 @@
         }
 
         .progress-step.active .step-circle {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            border-color: #2196F3;
             color: white;
             transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
         }
 
         .progress-step.completed .step-circle {
@@ -139,7 +165,7 @@
         }
 
         .progress-step.active .step-label {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -209,8 +235,8 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #2196F3;
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1);
             background: white;
         }
 
@@ -227,10 +253,7 @@
             right: 18px;
             top: 50%;
             transform: translateY(-50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #999;
             font-size: 1.4em;
         }
 
@@ -240,6 +263,8 @@
             overflow-y: auto;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
 
         .school-item {
@@ -252,17 +277,23 @@
         }
 
         .school-item:hover {
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
             transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
         }
 
         .school-item.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
             font-weight: 600;
             transform: translateX(5px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .school-item.selected .branch-address,
+        .school-item.selected .branch-phone,
+        .school-item.selected .school-info {
+            color: white !important;
         }
 
         .school-item:last-child {
@@ -278,7 +309,7 @@
         }
 
         .calendar-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
             padding: 24px;
             display: flex;
@@ -351,16 +382,17 @@
         }
 
         .calendar-date:hover:not(.disabled):not(.empty) {
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-            border-color: #667eea;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-color: #2196F3;
+            transform: scale(1.05);
         }
 
         .calendar-date.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
-            border-color: #667eea;
+            border-color: #2196F3;
             transform: scale(1.08);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
             font-weight: 600;
         }
 
@@ -409,18 +441,18 @@
         }
 
         .time-item:hover {
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-            border-color: #667eea;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-color: #2196F3;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
         }
 
         .time-item.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
-            border-color: #667eea;
+            border-color: #2196F3;
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
         }
 
         .time-item.disabled {
@@ -442,7 +474,7 @@
 
         .verify-btn {
             padding: 16px 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
             border: none;
             border-radius: 12px;
@@ -453,13 +485,13 @@
             position: relative;
             z-index: 10;
             pointer-events: auto;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
         }
 
         .verify-btn:hover {
-            background: linear-gradient(135deg, #5568d3 0%, #6439a1 100%);
+            background: linear-gradient(135deg, #1976D2 0%, #1E88E5 100%);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
         }
 
         .verify-btn:active {
@@ -486,7 +518,12 @@
 
         /* 체크박스 */
         .checkbox-group {
-            margin-top: 20px;
+            margin-top: 30px;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
         .checkbox-item {
@@ -498,11 +535,21 @@
             transition: all 0.3s;
         }
 
+        /* 마지막 항목 하단 여백 제거 */
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 전체 동의가 아닌 개별 항목만 크기 축소 */
+        .checkbox-item:not(.checkbox-all) {
+            padding: 16px;
+        }
+
         .checkbox-item:hover {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border-color: #2196F3;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
         }
 
         .checkbox-item input[type="checkbox"] {
@@ -510,6 +557,7 @@
             height: 20px;
             margin-right: 10px;
             cursor: pointer;
+            accent-color: #2196F3;
         }
 
         .checkbox-item label {
@@ -517,6 +565,112 @@
             display: flex;
             align-items: center;
             font-size: 1.1em;
+        }
+
+        /* 개별 약관 레이블 크기 축소 */
+        .checkbox-item:not(.checkbox-all) label {
+            font-size: 1em;
+        }
+
+        /* 전체 동의 */
+        .checkbox-all {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            border: none;
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.25);
+        }
+
+        .checkbox-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.35);
+        }
+
+        .checkbox-all label {
+            color: white;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        .checkbox-all input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: white;
+        }
+
+        /* 약관 상세 내용 */
+        .terms-detail {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9em;
+            line-height: 1.8;
+            color: #555;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        .terms-detail h4 {
+            color: #2196F3;
+            font-size: 1em;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .terms-detail p {
+            margin-bottom: 10px;
+        }
+
+        .terms-detail ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .terms-detail ul li {
+            padding-left: 15px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .terms-detail ul li:before {
+            content: "•";
+            color: #2196F3;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .terms-detail .note {
+            background: #E3F2FD;
+            border-left: 3px solid #2196F3;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+
+        /* 약관 토글 버튼 */
+        .terms-toggle {
+            background: none;
+            border: none;
+            color: #2196F3;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: underline;
+            margin-left: 10px;
+            padding: 0;
+        }
+
+        .terms-toggle:hover {
+            color: #42A5F5;
         }
 
         /* 버튼 */
@@ -538,27 +692,27 @@
         }
 
         .btn-prev {
-            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            background: linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(127, 140, 141, 0.2);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.25);
         }
 
         .btn-prev:hover {
-            background: linear-gradient(135deg, #7f8c8d 0%, #6c7a89 100%);
+            background: linear-gradient(135deg, #90CAF9 0%, #64B5F6 100%);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(127, 140, 141, 0.3);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
         }
 
         .btn-next {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
         }
 
         .btn-next:hover {
-            background: linear-gradient(135deg, #5568d3 0%, #6439a1 100%);
+            background: linear-gradient(135deg, #1976D2 0%, #1E88E5 100%);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
         }
 
         .btn:disabled {
@@ -594,40 +748,39 @@
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            align-items: center;
+            gap: 20px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .social-btn {
-            padding: 15px 30px;
-            border-radius: 10px;
-            color: white;
+            display: inline-block;
             text-decoration: none;
-            font-weight: bold;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            border-radius: 15px;
+            overflow: hidden;
+            max-width: 280px;
+            width: 100%;
         }
 
         .social-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.3);
         }
 
-        .social-btn.naver {
-            background: #03C75A;
-        }
-
-        .social-btn.instagram {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-        }
-
-        .social-btn.youtube {
-            background: #FF0000;
+        .social-btn img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+            transition: all 0.3s;
         }
 
         .share-btn {
             display: inline-block;
             padding: 18px 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
             border: none;
             border-radius: 14px;
@@ -636,20 +789,20 @@
             cursor: pointer;
             margin-bottom: 20px;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
         }
 
         .share-btn:hover {
-            background: linear-gradient(135deg, #5568d3 0%, #6439a1 100%);
+            background: linear-gradient(135deg, #1976D2 0%, #1E88E5 100%);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
         }
 
         .home-link {
             display: inline-block;
             padding: 16px 32px;
-            border: 2px solid #667eea;
-            color: #667eea;
+            border: 2px solid #2196F3;
+            color: #2196F3;
             border-radius: 14px;
             text-decoration: none;
             font-weight: 700;
@@ -657,52 +810,454 @@
         }
 
         .home-link:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
         }
 
+        /* 모바일 최적화 */
         @media (max-width: 768px) {
-            .form-container {
-                padding: 30px 20px;
+            body {
+                padding: 10px;
             }
 
-            .time-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+            .container {
+                border-radius: 16px;
             }
 
-            .calendar-date {
+            /* 헤더 */
+            .header {
+                padding: 35px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            /* 모바일 BI 로고 */
+            .header-logo {
+                max-width: 200px;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            /* 진행 표시줄 */
+            .progress-bar {
+                padding: 20px 15px;
+                overflow-x: auto;
+            }
+
+            .progress-step {
+                min-width: 60px;
+            }
+
+            .step-circle {
+                width: 35px;
+                height: 35px;
                 font-size: 0.9em;
+            }
+
+            .step-label {
+                font-size: 0.75em;
+                margin-top: 6px;
+            }
+
+            /* 폼 컨테이너 */
+            .form-container {
+                padding: 25px 15px;
+            }
+
+            .step-title {
+                font-size: 1.4em;
+                margin-bottom: 20px;
+            }
+
+            /* 입력 필드 */
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group input,
+            .form-group select {
+                font-size: 16px; /* iOS 자동 줌 방지 */
+                padding: 14px;
+            }
+
+            .form-group label {
+                font-size: 1em;
+            }
+
+            /* 검색 박스 */
+            .search-box input {
+                font-size: 16px; /* iOS 자동 줌 방지 */
+            }
+
+            /* 학교/지점 아이템 */
+            .school-item {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            /* 캘린더 */
+            .calendar-container {
+                border-radius: 12px;
             }
 
             .calendar-header {
                 padding: 15px;
             }
 
-            .calendar-month {
+            .calendar-header button {
+                width: 35px;
+                height: 35px;
                 font-size: 1.2em;
+            }
+
+            .calendar-month {
+                font-size: 1.1em;
+            }
+
+            .calendar-weekday {
+                font-size: 0.85em;
+                padding: 8px 2px;
+            }
+
+            .calendar-date {
+                height: 40px;
+                font-size: 0.9em;
+            }
+
+            /* 시간 그리드 */
+            .time-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .time-item {
+                padding: 12px;
+                font-size: 0.95em;
+            }
+
+            /* 휴대폰 인증 */
+            .phone-verify {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .phone-verify input {
+                width: 100%;
+            }
+
+            .verify-btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 0.95em;
+            }
+
+            .verify-code {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .verify-code input {
+                width: 100%;
+            }
+
+            /* 학교 수정 버튼 */
+            .edit-school-btn {
+                padding: 8px 15px;
+                font-size: 0.85em;
+                margin-left: 8px;
+                white-space: nowrap;
+            }
+
+            .school-input-group {
+                gap: 8px;
+            }
+
+            /* 약관 동의 */
+            .checkbox-group {
+                padding: 20px 15px;
+            }
+
+            .checkbox-all {
+                padding: 18px;
+            }
+
+            .checkbox-all label {
+                font-size: 1.1em;
+            }
+
+            .checkbox-item:not(.checkbox-all) {
+                padding: 14px;
+            }
+
+            .checkbox-item label {
+                font-size: 0.95em;
+            }
+
+            .terms-detail {
+                font-size: 0.85em;
+                padding: 15px;
+                max-height: 180px;
+            }
+
+            .terms-toggle {
+                font-size: 0.85em;
+                margin-left: 5px;
+            }
+
+            /* 버튼 */
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 30px;
+            }
+
+            .btn {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            /* 완료 페이지 */
+            .completion {
+                padding: 30px 20px;
+            }
+
+            .completion-icon {
+                font-size: 4em;
+            }
+
+            .completion h2 {
+                font-size: 1.8em;
+            }
+
+            .completion p {
+                font-size: 1em;
             }
 
             .social-links {
                 flex-direction: column;
+                gap: 15px;
+                align-items: center;
             }
 
-            .button-group {
-                flex-direction: column;
+            .social-btn {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .social-btn img {
+                width: 100%;
+                height: auto;
+            }
+
+            .share-btn {
+                padding: 14px;
+                font-size: 1em;
+            }
+
+            /* 모달 */
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .modal-header {
+                padding: 20px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.3em;
+            }
+
+            .modal-body {
+                padding: 20px;
+                max-height: 400px;
+            }
+
+            /* 선택된 지점 정보 */
+            #selectedBranchInfo,
+            [style*="background: linear-gradient(135deg, #2196F3"] {
+                padding: 20px !important;
+                font-size: 0.95em !important;
+            }
+
+            #selectedBranchInfo div:first-child,
+            [style*="font-size: 1.6em"] {
+                font-size: 1.3em !important;
+            }
+        }
+
+        /* 작은 모바일 (iPhone SE 등) */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            /* 작은 모바일 BI 로고 */
+            .header-logo {
+                max-width: 160px;
             }
 
             .step-title {
-                font-size: 1.5em;
+                font-size: 1.2em;
             }
+
+            .time-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-date {
+                height: 35px;
+                font-size: 0.85em;
+            }
+
+            .progress-bar {
+                padding: 15px 10px;
+            }
+
+            .step-circle {
+                width: 30px;
+                height: 30px;
+                font-size: 0.85em;
+            }
+
+            .step-label {
+                font-size: 0.7em;
+            }
+        }
+
+        /* 가로 모드 최적화 */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .header {
+                padding: 25px 20px;
+            }
+
+            .calendar-date {
+                height: 35px;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+            }
+
+            .modal-body {
+                max-height: 300px;
+            }
+        }
+
+        /* 학교 수정 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: transform 0.2s;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+            max-height: 500px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        .edit-school-btn {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .edit-school-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .school-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .school-input-group input {
+            flex: 1;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 에이닷영어학원</h1>
+            <img src="bi.png" alt="에이닷영어학원" class="header-logo">
             <p>학원 상담 예약 시스템</p>
         </div>
 
@@ -770,10 +1325,10 @@
                     <h2 class="step-title">📅 날짜·시간 선택</h2>
                     
                     <!-- 선택된 지점 표시 -->
-                    <div id="selectedBranchInfo" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 18px; margin-bottom: 35px; text-align: center; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);">
+                    <div id="selectedBranchInfo" style="background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%); color: white; padding: 28px; border-radius: 18px; margin-bottom: 35px; text-align: center; box-shadow: 0 8px 25px rgba(33, 150, 243, 0.25);">
                         <div style="font-size: 1.6em; font-weight: 700; letter-spacing: -0.5px;">에이닷영어학원 <span id="displayBranchName"></span></div>
                         <div style="font-size: 1em; margin-top: 12px; opacity: 0.95; font-weight: 500;">📍 <span id="displayBranchAddress"></span></div>
-                        <div style="font-size: 1em; margin-top: 8px; opacity: 0.95; font-weight: 500;">☎ <span id="displayBranchPhone"></span></div>
+                        <div style="font-size: 1.3em; margin-top: 10px; opacity: 0.95; font-weight: 600;">☎ <a href="#" id="displayBranchPhone" style="color: white; text-decoration: underline; cursor: pointer;"></a></div>
                     </div>
                     
                     <div class="form-group">
@@ -820,14 +1375,14 @@
                     <h2 class="step-title">✏️ 상담정보 입력</h2>
                     
                     <!-- 선택된 지점 표시 -->
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 18px; margin-bottom: 35px; text-align: center; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);">
+                    <div style="background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%); color: white; padding: 28px; border-radius: 18px; margin-bottom: 35px; text-align: center; box-shadow: 0 8px 25px rgba(33, 150, 243, 0.25);">
                         <div style="font-size: 1.6em; font-weight: 700; letter-spacing: -0.5px;">에이닷영어학원 <span id="displayBranchName3"></span></div>
                         <div style="font-size: 1em; margin-top: 12px; opacity: 0.95; font-weight: 500;">📍 <span id="displayBranchAddress3"></span></div>
-                        <div style="font-size: 1em; margin-top: 8px; opacity: 0.95; font-weight: 500;">☎ <span id="displayBranchPhone3"></span></div>
+                        <div style="font-size: 1.3em; margin-top: 10px; opacity: 0.95; font-weight: 600;">☎ <a href="#" id="displayBranchPhone3" style="color: white; text-decoration: underline; cursor: pointer;"></a></div>
                     </div>
                     
                     <div class="form-group">
-                        <label style="font-size: 1.3em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">👨‍👩‍👧 학부모(법정대리인) 정보</label>
+                        <label style="font-size: 1.3em; background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">👨‍👩‍👧 학부모(법정대리인) 정보</label>
                     </div>
 
                     <div class="form-group">
@@ -848,7 +1403,7 @@
                     </div>
 
                     <div class="form-group" style="margin-top: 40px;">
-                        <label style="font-size: 1.3em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">👶 자녀 정보</label>
+                        <label style="font-size: 1.3em; background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">👶 자녀 정보</label>
                     </div>
 
                     <div class="form-group">
@@ -858,37 +1413,70 @@
 
                     <div class="form-group">
                         <label for="childSchool">학교<span class="required">*</span></label>
-                        <input type="text" id="childSchool" name="childSchool" readonly>
+                        <div class="school-input-group">
+                            <input type="text" id="childSchool" name="childSchool" readonly>
+                            <button type="button" class="edit-school-btn" onclick="openSchoolModal()">🔍 수정</button>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="childGrade">학년<span class="required">*</span></label>
                         <select id="childGrade" name="childGrade" required>
                             <option value="">학년을 선택하세요</option>
-                            <option value="초5">초등학교 5학년</option>
-                            <option value="초6">초등학교 6학년</option>
-                            <option value="중1">중학교 1학년</option>
-                            <option value="중2">중학교 2학년</option>
-                            <option value="중3">중학교 3학년</option>
-                            <option value="고1">고등학교 1학년</option>
-                            <option value="고2">고등학교 2학년</option>
-                            <option value="고3">고등학교 3학년</option>
-                            <option value="재수생/기타">재수생/기타</option>
                         </select>
                     </div>
 
                     <div class="checkbox-group">
-                        <div class="checkbox-item">
+                        <!-- 전체 동의 -->
+                        <div class="checkbox-item checkbox-all">
                             <label>
-                                <input type="checkbox" id="privacyAgree" name="privacyAgree" required>
-                                개인정보 수집 및 이용 동의<span class="required">*</span>
+                                <input type="checkbox" id="agreeAll" name="agreeAll" onchange="toggleAllAgreements()">
+                                전체 동의
                             </label>
                         </div>
+
+                        <!-- 개인정보 수집 및 이용 동의 -->
                         <div class="checkbox-item">
                             <label>
-                                <input type="checkbox" id="marketingAgree" name="marketingAgree">
-                                마케팅 및 광고 활용 동의 (선택)
+                                <input type="checkbox" id="privacyAgree" name="privacyAgree" required onchange="checkAllAgreements()">
+                                개인정보 수집 및 이용 동의<span class="required">*</span>
+                                <button type="button" class="terms-toggle" onclick="toggleTerms('privacy')">상세보기 ▼</button>
                             </label>
+                            <div id="privacyTerms" class="terms-detail" style="display: none;">
+                                <h4>개인정보 수집 및 이용 동의</h4>
+                                <p>디쉐어는 학원 무료 상담 진행을 위해 고객님의 개인정보 수집 및 이용에 대한 동의를 얻고자 합니다.</p>
+                                <ul>
+                                    <li>① 수집 목적: 학원 무료 상담 일정 조율을 위한 연락</li>
+                                    <li>② 수집 항목: 학부모 이름, 학부모 연락처, 자녀 이름, 재학 중인 학교명, 학년</li>
+                                    <li>③ 보유 및 이용 기간: 수집일로부터 1년</li>
+                                </ul>
+                                <div class="note">
+                                    ※ 고객님께서는 동의하지 않으실 권리가 있으나, 이는 상담 진행을 위한 필수 정보로 동의를 거부하실 경우 상담이 제한될 수 있습니다.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 마케팅 및 광고 활용 동의 -->
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" id="marketingAgree" name="marketingAgree" onchange="checkAllAgreements()">
+                                마케팅 및 광고 활용 동의 (선택)
+                                <button type="button" class="terms-toggle" onclick="toggleTerms('marketing')">상세보기 ▼</button>
+                            </label>
+                            <div id="marketingTerms" class="terms-detail" style="display: none;">
+                                <h4>마케팅 및 광고 활용 동의</h4>
+                                <p>디쉐어는 위 학원 무료 상담 신청 과정에서 고객님으로부터 수집한 개인정보를 이용하여 광고성 정보를 전송하고자 고객님의 사전 수신 동의를 얻고자 합니다.</p>
+                                <ul>
+                                    <li>① 전송 방법: 디쉐어는 전화 및 문자메시지를 통하여 광고성 정보를 발송할 수 있습니다.</li>
+                                    <li>② 수집 목적: 디쉐어 맞춤 학습 서비스 안내, 온라인 설문 및 이벤트 등 광고성 정보 전달</li>
+                                    <li>③ 수집 항목: 학부모 이름, 학부모 연락처, 자녀 이름, 재학 중인 학교명, 학년</li>
+                                    <li>④ 보유 및 이용 기간: 동의일로부터 1년 또는 철회 시까지</li>
+                                    <li>⑤ 철회 안내: 고객님은 동의하신 이후라도 언제든지 동의를 철회하실 수 있습니다. 홈페이지 하단의 고객센터 전화번호 또는 전자우편 주소로 연락하여 동의를 철회하실 수 있습니다.</li>
+                                </ul>
+                                <div class="note">
+                                    ※ 고객님께서는 마케팅 정보 수신 동의를 거부하실 권리가 있습니다. 동의를 거부하실 경우 맞춤 학습 서비스 안내 및 추후 각종 이벤트 참여에 제한이 있을 수 있으나 무료 상담 신청은 정상적으로 진행하실 수 있습니다.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -907,9 +1495,15 @@
 
                         <h3 style="margin-bottom: 20px;">공식 채널 둘러보기</h3>
                         <div class="social-links">
-                            <a href="https://blog.naver.com/adotenglish" class="social-btn naver" target="_blank">📗 네이버블로그</a>
-                            <a href="https://instagram.com/adotenglish" class="social-btn instagram" target="_blank">📸 인스타그램</a>
-                            <a href="https://youtube.com/@adotenglish" class="social-btn youtube" target="_blank">🎥 유튜브</a>
+                            <a href="https://blog.naver.com/adotenglish_official" class="social-btn" target="_blank" rel="noopener noreferrer">
+                                <img src="thum_blog.png" alt="네이버 블로그">
+                            </a>
+                            <a href="https://www.instagram.com/adotenglish_official/" class="social-btn" target="_blank" rel="noopener noreferrer">
+                                <img src="thum_instagram.png" alt="인스타그램">
+                            </a>
+                            <a href="https://www.youtube.com/channel/UChQ4AORk_V9HdnMjCGNElGQ" class="social-btn" target="_blank" rel="noopener noreferrer">
+                                <img src="thum_youtube.png" alt="유튜브">
+                            </a>
                         </div>
 
                         <button class="share-btn" onclick="shareContent()">📤 에이닷영어학원 공유하기</button>
@@ -919,6 +1513,28 @@
                     </div>
                 </div>
             </form>
+        </div>
+
+        <!-- 학교 수정 모달 -->
+        <div id="schoolModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🏫 학교 검색</h2>
+                    <button class="modal-close" onclick="closeSchoolModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modalSchoolSearch">학교명 검색</label>
+                        <div class="search-box">
+                            <input type="text" id="modalSchoolSearch" placeholder="학교명을 입력하세요 (예: 서울초등학교)">
+                            <span class="search-icon">🔍</span>
+                        </div>
+                    </div>
+                    <div class="school-list" id="modalSchoolList">
+                        <!-- 학교 목록이 여기에 동적으로 추가됩니다 -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1080,7 +1696,7 @@
                 div.className = 'school-item';
                 div.innerHTML = `
                     <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 5px;">${school.name}</div>
-                    <div style="color: #666; font-size: 0.9em;">${school.address} | ${school.branch}</div>
+                    <div class="school-info" style="color: #666; font-size: 0.9em;">${school.address} | ${school.branch}</div>
                 `;
                 div.onclick = () => selectSchool(school, div);
                 container.appendChild(div);
@@ -1101,6 +1717,9 @@
             
             // Step 3의 자녀 학교에도 자동 입력
             document.getElementById('childSchool').value = school.name;
+            
+            // 학년 옵션 업데이트
+            updateGradeOptions(school.name);
             
             // 지점 섹션 표시
             document.getElementById('branchSection').style.display = 'block';
@@ -1127,8 +1746,8 @@
                 div.className = 'school-item';
                 div.innerHTML = `
                     <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 5px;">${branch.지점}</div>
-                    <div style="color: #666; font-size: 0.9em;">${branch.주소}</div>
-                    <div style="color: #4A90E2; font-size: 0.9em; margin-top: 5px;">☎ ${branch.번호}</div>
+                    <div class="branch-address" style="color: #666; font-size: 0.9em;">${branch.주소}</div>
+                    <div class="branch-phone" style="color: #2196F3; font-size: 0.9em; margin-top: 5px;">☎ ${branch.번호}</div>
                 `;
                 div.onclick = () => selectBranch(branch, div);
                 container.appendChild(div);
@@ -1349,12 +1968,16 @@
                     if (currentStep === 2) {
                         document.getElementById('displayBranchName').textContent = selectedBranchData.지점;
                         document.getElementById('displayBranchAddress').textContent = selectedBranchData.주소;
-                        document.getElementById('displayBranchPhone').textContent = selectedBranchData.번호;
+                        const phoneLink = document.getElementById('displayBranchPhone');
+                        phoneLink.textContent = selectedBranchData.번호;
+                        phoneLink.href = 'tel:' + selectedBranchData.번호.replace(/[^0-9]/g, '');
                     }
                     if (currentStep === 3) {
                         document.getElementById('displayBranchName3').textContent = selectedBranchData.지점;
                         document.getElementById('displayBranchAddress3').textContent = selectedBranchData.주소;
-                        document.getElementById('displayBranchPhone3').textContent = selectedBranchData.번호;
+                        const phoneLink3 = document.getElementById('displayBranchPhone3');
+                        phoneLink3.textContent = selectedBranchData.번호;
+                        phoneLink3.href = 'tel:' + selectedBranchData.번호.replace(/[^0-9]/g, '');
                     }
                 }
                 
@@ -1372,7 +1995,9 @@
                     if (currentStep === 2) {
                         document.getElementById('displayBranchName').textContent = selectedBranchData.지점;
                         document.getElementById('displayBranchAddress').textContent = selectedBranchData.주소;
-                        document.getElementById('displayBranchPhone').textContent = selectedBranchData.번호;
+                        const phoneLink = document.getElementById('displayBranchPhone');
+                        phoneLink.textContent = selectedBranchData.번호;
+                        phoneLink.href = 'tel:' + selectedBranchData.번호.replace(/[^0-9]/g, '');
                     }
                 }
                 
@@ -1535,6 +2160,159 @@
                 // 폴백: 클립보드 복사
                 navigator.clipboard.writeText('https://adotenglish.com');
                 alert('링크가 복사되었습니다!');
+            }
+        }
+
+        // 학년 옵션 업데이트 (학교명에 따라)
+        function updateGradeOptions(schoolName) {
+            const gradeSelect = document.getElementById('childGrade');
+            gradeSelect.innerHTML = '<option value="">학년을 선택하세요</option>';
+            
+            let grades = [];
+            
+            // 학교명에서 초/중/고 구분
+            if (schoolName.includes('초등학교')) {
+                grades = [
+                    { value: '초5', text: '초등학교 5학년' },
+                    { value: '초6', text: '초등학교 6학년' },
+                    { value: '기타/재수생', text: '기타/재수생' }
+                ];
+            } else if (schoolName.includes('중학교')) {
+                grades = [
+                    { value: '중1', text: '중학교 1학년' },
+                    { value: '중2', text: '중학교 2학년' },
+                    { value: '중3', text: '중학교 3학년' },
+                    { value: '기타/재수생', text: '기타/재수생' }
+                ];
+            } else if (schoolName.includes('고등학교')) {
+                grades = [
+                    { value: '고1', text: '고등학교 1학년' },
+                    { value: '고2', text: '고등학교 2학년' },
+                    { value: '고3', text: '고등학교 3학년' },
+                    { value: '기타/재수생', text: '기타/재수생' }
+                ];
+            } else {
+                // 구분이 어려운 경우 전체 학년 표시
+                grades = [
+                    { value: '초5', text: '초등학교 5학년' },
+                    { value: '초6', text: '초등학교 6학년' },
+                    { value: '중1', text: '중학교 1학년' },
+                    { value: '중2', text: '중학교 2학년' },
+                    { value: '중3', text: '중학교 3학년' },
+                    { value: '고1', text: '고등학교 1학년' },
+                    { value: '고2', text: '고등학교 2학년' },
+                    { value: '고3', text: '고등학교 3학년' },
+                    { value: '기타/재수생', text: '기타/재수생' }
+                ];
+            }
+            
+            // 옵션 추가
+            grades.forEach(grade => {
+                const option = document.createElement('option');
+                option.value = grade.value;
+                option.textContent = grade.text;
+                gradeSelect.appendChild(option);
+            });
+        }
+
+        // 학교 수정 모달 열기
+        function openSchoolModal() {
+            const modal = document.getElementById('schoolModal');
+            modal.style.display = 'block';
+            
+            // 모달 학교 목록 초기화
+            displayModalSchools(schools);
+            
+            // 모달 검색창 초기화
+            document.getElementById('modalSchoolSearch').value = '';
+            
+            // 모달 외부 클릭 시 닫기
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    closeSchoolModal();
+                }
+            };
+        }
+
+        // 학교 수정 모달 닫기
+        function closeSchoolModal() {
+            document.getElementById('schoolModal').style.display = 'none';
+        }
+
+        // 모달에서 학교 목록 표시
+        function displayModalSchools(schoolList) {
+            const container = document.getElementById('modalSchoolList');
+            container.innerHTML = '';
+            
+            if (schoolList.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">검색 결과가 없습니다.</div>';
+                return;
+            }
+
+            schoolList.forEach(school => {
+                const div = document.createElement('div');
+                div.className = 'school-item';
+                div.innerHTML = `
+                    <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 5px;">${school.name}</div>
+                    <div class="school-info" style="color: #666; font-size: 0.9em;">${school.address} | ${school.branch}</div>
+                `;
+                div.onclick = () => selectSchoolFromModal(school, div);
+                container.appendChild(div);
+            });
+        }
+
+        // 모달에서 학교 선택
+        function selectSchoolFromModal(school, element) {
+            // Step 3의 자녀 학교 업데이트
+            document.getElementById('childSchool').value = school.name;
+            
+            // 학년 옵션 업데이트
+            updateGradeOptions(school.name);
+            
+            // selectedSchoolData 업데이트
+            selectedSchoolData = school;
+            
+            // 모달 닫기
+            closeSchoolModal();
+        }
+
+        // 모달 학교 검색
+        document.getElementById('modalSchoolSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = schools.filter(school => 
+                school.name.toLowerCase().includes(searchTerm) || 
+                school.address.toLowerCase().includes(searchTerm)
+            );
+            displayModalSchools(filtered);
+        });
+
+        // 전체 동의 토글
+        function toggleAllAgreements() {
+            const agreeAll = document.getElementById('agreeAll').checked;
+            document.getElementById('privacyAgree').checked = agreeAll;
+            document.getElementById('marketingAgree').checked = agreeAll;
+        }
+
+        // 개별 동의 체크 시 전체 동의 상태 확인
+        function checkAllAgreements() {
+            const privacyAgree = document.getElementById('privacyAgree').checked;
+            const marketingAgree = document.getElementById('marketingAgree').checked;
+            document.getElementById('agreeAll').checked = privacyAgree && marketingAgree;
+        }
+
+        // 약관 상세보기 토글
+        function toggleTerms(type) {
+            const termsId = type === 'privacy' ? 'privacyTerms' : 'marketingTerms';
+            const termsDiv = document.getElementById(termsId);
+            const allButtons = document.querySelectorAll('.terms-toggle');
+            
+            if (termsDiv.style.display === 'none') {
+                termsDiv.style.display = 'block';
+                // 버튼 텍스트 변경
+                event.target.textContent = '상세보기 ▲';
+            } else {
+                termsDiv.style.display = 'none';
+                event.target.textContent = '상세보기 ▼';
             }
         }
     </script>
