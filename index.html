@@ -631,10 +631,32 @@
             margin-right: 12px;
             cursor: pointer;
             accent-color: #2196F3;
+            pointer-events: auto !important;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(33, 150, 243, 0.3);
         }
 
         .checkbox-all input[type="checkbox"]:focus {
             outline: none;
+        }
+
+        /* 모바일 터치 최적화 */
+        .checkbox-all label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(33, 150, 243, 0.2);
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .checkbox-all label * {
+            pointer-events: none;
+        }
+
+        .checkbox-all label input {
+            pointer-events: auto !important;
         }
 
         /* 약관 상세 내용 */
@@ -1082,6 +1104,19 @@
 
             .checkbox-all label {
                 font-size: 1.1em;
+                min-height: 44px; /* 모바일 터치 영역 최소 크기 */
+                padding: 5px 0;
+            }
+
+            .checkbox-all input[type="checkbox"] {
+                width: 24px !important;
+                height: 24px !important;
+                min-width: 24px;
+                min-height: 24px;
+                pointer-events: auto !important;
+                touch-action: manipulation;
+                -webkit-appearance: checkbox;
+                appearance: checkbox;
             }
 
             .checkbox-item:not(.checkbox-all) {
@@ -1620,7 +1655,7 @@
                     <div class="checkbox-group">
                         <!-- 전체 동의 -->
                         <div class="checkbox-item checkbox-all">
-                            <label>
+                            <label for="agreeAll">
                                 <input type="checkbox" id="agreeAll" name="agreeAll">
                                 전체 동의
                             </label>
@@ -1768,6 +1803,8 @@
                 if (agreeAll) {
                     // 기존 이벤트 제거 후 새로 추가
                     agreeAll.onchange = null;
+                    
+                    // change 이벤트 (주요 이벤트)
                     agreeAll.addEventListener('change', function(e) {
                         console.log('🔥 전체동의 체크박스 변경됨!', this.checked);
                         const isChecked = this.checked;
@@ -1781,12 +1818,88 @@
                             marketingAgree.checked = isChecked;
                             console.log('✅ 마케팅동의 체크:', isChecked);
                         }
-                    });
+                    }, { passive: true });
                     
-                    // 클릭 이벤트도 추가 (혹시 모를 경우를 위해)
+                    // 클릭 이벤트 (모바일 지원)
                     agreeAll.addEventListener('click', function(e) {
-                        console.log('🖱️ 전체동의 클릭됨!');
-                    });
+                        console.log('🖱️ 전체동의 클릭됨!', this.checked);
+                        // change 이벤트가 발생하지 않을 수 있으므로 직접 처리
+                        setTimeout(function() {
+                            const isChecked = agreeAll.checked;
+                            if (privacyAgree) privacyAgree.checked = isChecked;
+                            if (marketingAgree) marketingAgree.checked = isChecked;
+                        }, 10);
+                    }, { passive: true });
+                    
+                    // 터치 이벤트 (모바일 전용) - 여러 이벤트 처리
+                    let touchStartTime = 0;
+                    
+                    agreeAll.addEventListener('touchstart', function(e) {
+                        touchStartTime = Date.now();
+                        console.log('📱 전체동의 touchstart');
+                    }, { passive: true });
+                    
+                    agreeAll.addEventListener('touchend', function(e) {
+                        const touchDuration = Date.now() - touchStartTime;
+                        console.log('📱 전체동의 touchend', touchDuration + 'ms');
+                        
+                        // 짧은 터치만 처리 (스크롤 방지)
+                        if (touchDuration < 300) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            // 체크 상태 토글
+                            agreeAll.checked = !agreeAll.checked;
+                            
+                            // change 이벤트 강제 발생
+                            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+                            agreeAll.dispatchEvent(changeEvent);
+                            
+                            console.log('✅ 터치로 체크 상태 변경:', agreeAll.checked);
+                        }
+                    }, { passive: false });
+                    
+                    // label 클릭 처리 (모바일에서 중요)
+                    const agreeAllLabel = agreeAll.closest('label');
+                    if (agreeAllLabel) {
+                        let labelTouchStartTime = 0;
+                        
+                        agreeAllLabel.addEventListener('touchstart', function(e) {
+                            labelTouchStartTime = Date.now();
+                            console.log('📱 전체동의 라벨 touchstart');
+                        }, { passive: true });
+                        
+                        agreeAllLabel.addEventListener('touchend', function(e) {
+                            const touchDuration = Date.now() - labelTouchStartTime;
+                            
+                            // 체크박스 직접 터치가 아닌 경우만 처리
+                            if (e.target !== agreeAll && e.target !== agreeAllLabel.querySelector('input')) {
+                                console.log('📱 전체동의 라벨 터치됨!', touchDuration + 'ms');
+                                
+                                if (touchDuration < 300) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    
+                                    agreeAll.checked = !agreeAll.checked;
+                                    const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+                                    agreeAll.dispatchEvent(changeEvent);
+                                    
+                                    console.log('✅ 라벨 터치로 체크 상태 변경:', agreeAll.checked);
+                                }
+                            }
+                        }, { passive: false });
+                        
+                        // 클릭 이벤트도 여전히 처리
+                        agreeAllLabel.addEventListener('click', function(e) {
+                            // 체크박스 직접 클릭이 아닌 경우만 처리
+                            if (e.target !== agreeAll && e.target !== agreeAllLabel.querySelector('input')) {
+                                console.log('🏷️ 전체동의 라벨 클릭됨!');
+                                agreeAll.checked = !agreeAll.checked;
+                                const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+                                agreeAll.dispatchEvent(changeEvent);
+                            }
+                        }, { passive: true });
+                    }
                     
                     console.log('✅ 전체동의 이벤트 바인딩 완료');
                 } else {
