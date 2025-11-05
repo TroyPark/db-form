@@ -1040,21 +1040,25 @@
             }
 
             .social-links {
-                flex-direction: row;
-                gap: 10px;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                gap: 12px;
                 align-items: center;
                 justify-content: center;
+                padding: 0 10px;
             }
 
             .social-btn {
-                width: auto;
-                max-width: 90px;
-                flex: 0 0 auto;
+                width: 85px !important;
+                max-width: 85px !important;
+                min-width: 85px !important;
+                flex: 0 0 85px !important;
             }
 
             .social-btn img {
-                width: 100%;
+                width: 85px !important;
                 height: auto;
+                max-width: 85px !important;
             }
 
             .share-btn {
