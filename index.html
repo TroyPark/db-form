@@ -343,9 +343,12 @@
             transition: all 0.2s;
         }
 
-        .calendar-header button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+        /* 데스크톱에서만 hover 효과 (모바일 제외) */
+        @media (hover: hover) and (pointer: fine) {
+            .calendar-header button:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(1.1);
+            }
         }
 
         .calendar-month {
@@ -395,10 +398,13 @@
             font-size: 1.1em;
         }
 
-        .calendar-date:hover:not(.disabled):not(.empty) {
-            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-            border-color: #2196F3;
-            transform: scale(1.05);
+        /* 데스크톱에서만 hover 효과 (모바일 제외) */
+        @media (hover: hover) and (pointer: fine) {
+            .calendar-date:hover:not(.disabled):not(.empty) {
+                background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+                border-color: #2196F3;
+                transform: scale(1.05);
+            }
         }
 
         .calendar-date.selected {
@@ -454,11 +460,14 @@
             background: #fafafa;
         }
 
-        .time-item:hover {
-            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-            border-color: #2196F3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+        /* 데스크톱에서만 hover 효과 (모바일 제외) */
+        @media (hover: hover) and (pointer: fine) {
+            .time-item:hover {
+                background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+                border-color: #2196F3;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+            }
         }
 
         .time-item.selected {
@@ -1022,6 +1031,26 @@
                 width: 35px;
                 height: 35px;
                 font-size: 1.2em;
+            }
+
+            /* 모바일에서 hover/active 효과 완전 제거 */
+            .calendar-header button:hover,
+            .calendar-header button:active,
+            .calendar-date:hover,
+            .calendar-date:active:not(.selected),
+            .time-item:hover,
+            .time-item:active:not(.selected) {
+                background: inherit !important;
+                transform: none !important;
+                border-color: inherit !important;
+                box-shadow: none !important;
+            }
+            
+            /* 스크롤 중 터치 방해 방지 */
+            .calendar-date,
+            .time-item {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
             }
 
             .calendar-month {
