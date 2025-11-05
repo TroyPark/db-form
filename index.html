@@ -225,6 +225,28 @@
             font-weight: 600;
             font-size: 1.05em;
         }
+        
+        /* 이모지와 텍스트 모두 일반 색상으로 표시 (gradient 제거) */
+        .form-group label,
+        .form-group label *,
+        .form-group label span {
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            -webkit-text-fill-color: unset !important;
+            background-clip: unset !important;
+            color: #333 !important;
+        }
+        
+        /* 이모지 특별 처리 */
+        .form-group label::before,
+        .form-group label::after,
+        .form-group label *::before,
+        .form-group label *::after {
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            -webkit-text-fill-color: unset !important;
+            background-clip: unset !important;
+        }
 
         .required {
             color: #e74c3c;
