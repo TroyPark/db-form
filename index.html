@@ -1525,7 +1525,7 @@
                         <!-- 전체 동의 -->
                         <div class="checkbox-item checkbox-all">
                             <label>
-                                <input type="checkbox" id="agreeAll" name="agreeAll" onchange="toggleAllAgreements()">
+                                <input type="checkbox" id="agreeAll" name="agreeAll" onclick="toggleAllAgreements()" onchange="toggleAllAgreements()">
                                 전체 동의
                             </label>
                         </div>
@@ -2413,16 +2413,30 @@
 
         // 전체 동의 토글
         function toggleAllAgreements() {
-            const agreeAll = document.getElementById('agreeAll').checked;
-            document.getElementById('privacyAgree').checked = agreeAll;
-            document.getElementById('marketingAgree').checked = agreeAll;
+            const agreeAll = document.getElementById('agreeAll');
+            const privacyAgree = document.getElementById('privacyAgree');
+            const marketingAgree = document.getElementById('marketingAgree');
+            
+            console.log('전체동의 클릭:', agreeAll.checked);
+            
+            if (agreeAll && privacyAgree && marketingAgree) {
+                privacyAgree.checked = agreeAll.checked;
+                marketingAgree.checked = agreeAll.checked;
+                
+                console.log('개인정보동의:', privacyAgree.checked);
+                console.log('마케팅동의:', marketingAgree.checked);
+            }
         }
 
         // 개별 동의 체크 시 전체 동의 상태 확인
         function checkAllAgreements() {
-            const privacyAgree = document.getElementById('privacyAgree').checked;
-            const marketingAgree = document.getElementById('marketingAgree').checked;
-            document.getElementById('agreeAll').checked = privacyAgree && marketingAgree;
+            const agreeAll = document.getElementById('agreeAll');
+            const privacyAgree = document.getElementById('privacyAgree');
+            const marketingAgree = document.getElementById('marketingAgree');
+            
+            if (agreeAll && privacyAgree && marketingAgree) {
+                agreeAll.checked = privacyAgree.checked && marketingAgree.checked;
+            }
         }
 
         // 약관 상세보기 토글
