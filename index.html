@@ -597,15 +597,32 @@
             box-shadow: 0 6px 20px rgba(33, 150, 243, 0.25);
         }
 
+        /* hover, active 효과 제거 - 색상 유지 */
         .checkbox-all:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.35);
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.25);
+            transform: none;
+        }
+
+        .checkbox-all:active,
+        .checkbox-all:focus,
+        .checkbox-all:focus-within {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.25);
+            outline: none;
         }
 
         .checkbox-all label {
             color: white;
             font-weight: 700;
             font-size: 1.2em;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-all label:active {
+            background: none;
+            color: white;
         }
 
         .checkbox-all input[type="checkbox"] {
@@ -614,6 +631,10 @@
             margin-right: 12px;
             cursor: pointer;
             accent-color: white;
+        }
+
+        .checkbox-all input[type="checkbox"]:focus {
+            outline: none;
         }
 
         /* 약관 상세 내용 */
@@ -1050,6 +1071,13 @@
 
             .checkbox-all {
                 padding: 18px;
+            }
+
+            .checkbox-all:hover,
+            .checkbox-all:active,
+            .checkbox-all:focus {
+                background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%) !important;
+                transform: none !important;
             }
 
             .checkbox-all label {
@@ -1732,29 +1760,36 @@
             const marketingAgree = document.getElementById('marketingAgree');
             
             if (agreeAll) {
-                agreeAll.addEventListener('change', function() {
-                    console.log('전체동의 change 이벤트 발생!');
-                    toggleAllAgreements();
-                });
-                agreeAll.addEventListener('click', function() {
-                    console.log('전체동의 click 이벤트 발생!');
+                // change 이벤트만 사용 (label 클릭 시 자동으로 발생)
+                agreeAll.addEventListener('change', function(e) {
+                    console.log('✅ 전체동의 change 이벤트 발생!');
+                    console.log('현재 체크 상태:', this.checked);
+                    
+                    // setTimeout으로 다음 이벤트 루프에서 실행
+                    setTimeout(function() {
+                        toggleAllAgreements();
+                    }, 0);
                 });
             } else {
-                console.error('agreeAll 요소를 찾을 수 없습니다!');
+                console.error('❌ agreeAll 요소를 찾을 수 없습니다!');
             }
             
             if (privacyAgree) {
                 privacyAgree.addEventListener('change', function() {
-                    console.log('개인정보동의 change 이벤트 발생!');
+                    console.log('✅ 개인정보동의 change 이벤트 발생!');
                     checkAllAgreements();
                 });
+            } else {
+                console.error('❌ privacyAgree 요소를 찾을 수 없습니다!');
             }
             
             if (marketingAgree) {
                 marketingAgree.addEventListener('change', function() {
-                    console.log('마케팅동의 change 이벤트 발생!');
+                    console.log('✅ 마케팅동의 change 이벤트 발생!');
                     checkAllAgreements();
                 });
+            } else {
+                console.error('❌ marketingAgree 요소를 찾을 수 없습니다!');
             }
         });
 
@@ -2516,30 +2551,28 @@
 
         // 전체 동의 토글
         function toggleAllAgreements() {
-            console.log('=== toggleAllAgreements 함수 호출됨 ===');
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('📋 toggleAllAgreements 함수 실행');
             
             const agreeAll = document.getElementById('agreeAll');
             const privacyAgree = document.getElementById('privacyAgree');
             const marketingAgree = document.getElementById('marketingAgree');
             
-            console.log('agreeAll 요소:', agreeAll);
-            console.log('privacyAgree 요소:', privacyAgree);
-            console.log('marketingAgree 요소:', marketingAgree);
-            
             if (!agreeAll || !privacyAgree || !marketingAgree) {
-                console.error('요소를 찾을 수 없습니다!');
+                console.error('❌ 체크박스 요소를 찾을 수 없습니다!');
                 return;
             }
             
             const isChecked = agreeAll.checked;
-            console.log('전체동의 체크 상태:', isChecked);
+            console.log('📌 전체동의 체크박스 상태:', isChecked);
             
-            // 강제로 체크 상태 변경
+            // 개별 체크박스에 동일하게 적용
             privacyAgree.checked = isChecked;
             marketingAgree.checked = isChecked;
             
-            console.log('변경 후 - 개인정보동의:', privacyAgree.checked);
-            console.log('변경 후 - 마케팅동의:', marketingAgree.checked);
+            console.log('✅ 개인정보동의 체크박스:', privacyAgree.checked);
+            console.log('✅ 마케팅동의 체크박스:', marketingAgree.checked);
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         }
 
         // 개별 동의 체크 시 전체 동의 상태 확인
